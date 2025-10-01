@@ -4,6 +4,11 @@ public class Player : MonoBehaviour
 {
     private Rigidbody rb;
 
+    [Header("Gun Data")]
+    [SerializeField] Transform firePoint;
+    [SerializeField] GameObject bulletPrefab;
+    [SerializeField] float bulletSpeed;
+
     [Header("Movement Data")]
     [SerializeField] float moveSpeed;
     [SerializeField] float rotationSpeed;
@@ -28,6 +33,11 @@ public class Player : MonoBehaviour
     {
         UpdateAim();
         CheckInputs();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Shoot();
+        }
     }
 
 
@@ -82,5 +92,16 @@ public class Player : MonoBehaviour
             float fixedY = aimTransform.position.y;
             aimTransform.position = new Vector3(hit.point.x, fixedY, hit.point.z);
         }
+    }
+
+    private void Shoot()
+    {
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+        Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
+
+        bulletRb.linearVelocity = firePoint.forward * bulletSpeed;
+
+        Destroy(bullet, 5f);
     }
 }
